@@ -59,7 +59,7 @@ public class DataBaseHelper {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                Log.d(TAG, document.getId() + " READALL=> " + document.getData());
                                 String title = document.get("title").toString();
                                 String description = document.get("description").toString();
                                 String imdb = document.get("imdb").toString();
