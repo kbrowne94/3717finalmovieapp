@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">movieapp</string>
-    <string name="TaskName">Task Name</string>
-    <string name="TodoDate">" Date Due(format: YYYY-MM-DD)"</string>
-    <string name="CompletedTask">Completed Task</string>
+    <string name="MovieTitle">Movie Title</string>
+    <string name="MovieDescription">Description of movie</string>
+    <string name="imdb">imdb link</string>
     <string name="add">add</string>
     <string name="Delete">Delete</string>
     <string name="deleteId">delete id</string>
