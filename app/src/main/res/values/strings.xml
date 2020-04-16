@@ -6,4 +6,5 @@
     <string name="add">add</string>
     <string name="Delete">Delete</string>
     <string name="deleteId">delete id</string>
+    <string name="viewall">viewall</string>
 </resources>

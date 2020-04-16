@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btn_add, btn_viewall;
+    Button btn_add;
     EditText et_title, et_description, et_imdb;
     ListView movie_list;
     ArrayAdapter movieArrayAdapter;
@@ -40,15 +40,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        btn_viewall = findViewById(R.id.btn_viewall);
         btn_add = findViewById(R.id.btn_add);
         et_title = findViewById(R.id.et_title);
         et_description = findViewById(R.id.et_description);
         et_imdb = findViewById(R.id.et_imdb);
         movie_list = findViewById(R.id.movie_list);
         dataBaseHelper = new DataBaseHelper();
-//        ShowMoviesOnListView(dataBaseHelper);
-
+        getAllMovies();
 
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,63 +64,38 @@ public class MainActivity extends AppCompatActivity {
                 DataBaseHelper dataBaseHelper = new DataBaseHelper();
                 dataBaseHelper.addOne(movieModel);
                 Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
-//                ShowMoviesOnListView(dataBaseHelper);
+                getAllMovies();
             }
         });
-
-        btn_viewall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try{
-                    movieArrayAdapter = new ArrayAdapter<MovieModel>(MainActivity.this, android.R.layout.simple_expandable_list_item_1, getAllMovies());
-                    movie_list.setAdapter(movieArrayAdapter);
-                }
-                catch (Exception e){
-                    Toast.makeText(MainActivity.this, "Error reading list", Toast.LENGTH_SHORT).show();
-                }
-
-
-                Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
-            }
-        });
-
 
     }
 
-    public List<MovieModel> getAllMovies(){
-        final List<MovieModel> returnList = new ArrayList<>();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("movie")
+
+    public void getAllMovies(){
+        db = FirebaseFirestore.getInstance();
+        db.collection("movies")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            List<MovieModel> returnList = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " READALL=> " + document.getData());
-                                String title = document.get("title").toString();
-                                String description = document.get("description").toString();
-                                String imdb = document.get("imdb").toString();
+                                Log.d(TAG, document.getId() + " READALL=> " + document.get("title"));
+                                String title = document.getString("title");
+                                String description = document.getString("description");
+                                String imdb = document.getString("imdb");
                                 MovieModel movieModel = new MovieModel(title,description,imdb);
                                 returnList.add(movieModel);
 
                             }
+                            movieArrayAdapter = new ArrayAdapter<MovieModel>(MainActivity.this, android.R.layout.simple_expandable_list_item_1,returnList);
+                            movie_list.setAdapter(movieArrayAdapter);
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
                     }
                 });
 
-        return returnList;
     }
-
-
-//    private void ShowMoviesOnListView(DataBaseHelper dataBaseHelper2) {
-//        try {
-//            movieArrayAdapter = new ArrayAdapter<MovieModel>(MainActivity.this, android.R.layout.simple_expandable_list_item_1, dataBaseHelper2.getAllMovies());
-//            movie_list.setAdapter(movieArrayAdapter);
-//        } catch (Exception e){
-//            Toast.makeText(MainActivity.this, "Error reading list", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 }

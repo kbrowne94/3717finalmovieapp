@@ -45,8 +45,8 @@ public class MovieModel {
 
     @Override
     public String toString() {
-        return "title:'" + title + '\'' +
-                ", description:'" + description + '\'' +
-                ", imdb:'" + imdb + '\'';
+        return "title:" + title+ "\n" +
+                "description:" + description+ "\n"+
+                "imdb:" + imdb +  "\n";
     }
 }
